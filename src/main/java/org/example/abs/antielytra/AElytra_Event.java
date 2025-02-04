@@ -1,6 +1,5 @@
 package org.example.abs.antielytra;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,25 +12,27 @@ import java.util.List;
 
 public class AElytra_Event implements Listener {
 
-    private FileConfiguration config;
+    private final AntiElytra plugin;
+    private final FileConfiguration config;
+    private final List<String> worlds;
 
-    private List<String> worlds;
-
-    public static AntiElytra plugin = AntiElytra.getInstace();
+    public AElytra_Event() {
+        this.plugin = AntiElytra.getInstace();
+        this.config = plugin.getConfig();
+        this.worlds = config.getStringList("worlds");
+    }
 
     @EventHandler
     public void disableElytra(PlayerMoveEvent e) {
-
         Player p = e.getPlayer();
         String world = p.getWorld().getName();
 
-        plugin.saveDefaultConfig();
-        this.config = plugin.getConfig();
-        this.worlds = this.config.getStringList("worlds");
-
-        if(worlds.contains(world) && p.isGliding()) {
+        if (worlds.contains(world) && p.isGliding()) {
             p.setGliding(false);
-            p.sendMessage(plugin.getConfig().getString("messages.no_elytra"));
+            if (config.contains("messages.no_elytra")) {
+                String msg = config.getString("messages.no_elytra", "§cElytra is disabled in this world!");
+                p.sendMessage(msg);
+            }
         }
     }
 
@@ -40,13 +41,8 @@ public class AElytra_Event implements Listener {
         Player p = e.getPlayer();
         String world = p.getWorld().getName();
 
-        String msg = plugin.getConfig().getString("messages.disableWorld");
-
-        plugin.saveDefaultConfig();
-        this.config = plugin.getConfig();
-        this.worlds = this.config.getStringList("worlds");
-
-        if(worlds.contains(world)) {
+        if (worlds.contains(world) && config.contains("messages.disableWorld")) {
+            String msg = config.getString("messages.disableWorld", "§cElytra is not allowed here!");
             p.sendMessage(msg);
         }
     }
@@ -56,17 +52,9 @@ public class AElytra_Event implements Listener {
         Player p = e.getPlayer();
         String world = p.getWorld().getName();
 
-        String msg = plugin.getConfig().getString("messages.disableWorld");
-
-        plugin.saveDefaultConfig();
-        this.config = plugin.getConfig();
-        this.worlds = this.config.getStringList("worlds");
-
-        if(worlds.contains(world)) {
+        if (worlds.contains(world) && config.contains("messages.disableWorld")) {
+            String msg = config.getString("messages.disableWorld", "§cElytra is not allowed here!");
             p.sendMessage(msg);
         }
     }
-
-
-
 }
