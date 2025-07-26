@@ -1,6 +1,6 @@
 name: AntiElytra
-version: '1.4.2-SNAPSHOT'
-main: org.example.abs.antielytra.AntiElytra
+version: '1.5'
+main: org.example.wleku.antielytra.AntiElytra
 api-version: '1.21'
 
 commands:

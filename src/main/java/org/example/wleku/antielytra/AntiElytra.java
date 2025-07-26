@@ -1,4 +1,4 @@
-package org.example.abs.antielytra;
+package org.example.wleku.antielytra;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,7 +23,8 @@ public final class AntiElytra extends JavaPlugin {
 
         String activator = getConfig().getString("drop");
 
-        Bukkit.getPluginManager().registerEvents(new AElytra_Event(), this);
+        // Bukkit.getPluginManager().registerEvents(new AElytra_Event(), this);
+        Bukkit.getPluginManager().registerEvents(new ElytraEvent(), this);
 
         saveDefaultConfig();
 
