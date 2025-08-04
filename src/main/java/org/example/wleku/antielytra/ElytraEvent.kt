@@ -1,5 +1,8 @@
 package org.example.wleku.antielytra
 
+import net.kyori.adventure.text.Component
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
@@ -8,17 +11,28 @@ import org.bukkit.event.player.PlayerMoveEvent
 
 class ElytraEvent : Listener {
 
-    private val plugin = AntiElytra.getInstace()
+    lateinit var config: FileConfiguration
+    lateinit var worlds: List<String>
+    var plugin = AElytraMain.instance
+
+    private val disabledWorld: String = plugin.config.getString("messages.disableWorld").toString()
+    private val disabled: String = plugin.config.getString("messages.disableElytra").toString()
 
     @EventHandler
     fun disableElytra(event: PlayerMoveEvent) {
         val player = event.player
         val world = player.world.name
-        val worlds = plugin.config.getStringList("worlds")
 
-        if (worlds.equals(world) && player.isGliding) {
-            player.isGliding = false
-            player.sendMessage(plugin.config.equals("messages.disableElytra").toString())
+        plugin.saveDefaultConfig()
+        this.config = plugin.config
+        this.worlds = config.getStringList("worlds")
+
+        if (player is Player) {
+            if (worlds.contains(world) && player.isGliding) {
+                event.isCancelled = true
+                player.isGliding = false
+                player.sendActionBar(disabled)
+            }
         }
     }
 
@@ -26,10 +40,13 @@ class ElytraEvent : Listener {
     fun onTeleported(event: PlayerChangedWorldEvent) {
         val player = event.player
         val world = player.world.name
-        val worlds = plugin.config.getStringList("worlds")
 
-        if (worlds.equals(world)) {
-            player.sendMessage(plugin.config.equals("messages.disableWorld").toString())
+        plugin.saveDefaultConfig()
+        val configs = plugin.config
+        val worlds = configs.getStringList("worlds")
+
+        if (worlds.contains(world)) {
+            player.sendMessage(disabledWorld)
         }
     }
 
@@ -37,10 +54,13 @@ class ElytraEvent : Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
         val world = player.world.name
-        val worlds = plugin.config.getStringList("worlds")
 
-        if (worlds.equals(world)) {
-            player.sendMessage(plugin.config.equals("messages.disableWorld").toString())
+        plugin.saveDefaultConfig()
+        val configs = plugin.config
+        val worlds = configs.getStringList("worlds")
+
+        if (worlds.contains(world)) {
+            player.sendMessage(disabledWorld)
         }
     }
 }

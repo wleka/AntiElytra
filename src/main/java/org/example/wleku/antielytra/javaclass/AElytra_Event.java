@@ -1,4 +1,4 @@
-package org.example.wleku.antielytra;
+package org.example.wleku.antielytra.javaclass;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.example.wleku.antielytra.AElytraMain;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class AElytra_Event implements Listener {
 
     private List<String> worlds;
 
-    public static AntiElytra plugin = AntiElytra.getInstace();
+    public static AElytraMain plugin = AElytraMain.instance;
 
     @EventHandler
     public void disableElytra(PlayerMoveEvent e) {
@@ -46,7 +47,7 @@ public class AElytra_Event implements Listener {
         this.worlds = this.config.getStringList("worlds");
 
         if(worlds.contains(world)) {
-            p.sendMessage(msg);
+           p.sendMessage(msg);
         }
     }
 
@@ -57,12 +58,12 @@ public class AElytra_Event implements Listener {
 
         String msg = plugin.getConfig().getString("messages.disableWorld");
 
-        plugin.saveDefaultConfig();
-        this.config = plugin.getConfig();
+       plugin.saveDefaultConfig();
+       this.config = plugin.getConfig();
         this.worlds = this.config.getStringList("worlds");
 
         if(worlds.contains(world)) {
-            p.sendMessage(msg);
+           p.sendMessage(msg);
         }
     }
 
